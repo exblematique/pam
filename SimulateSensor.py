@@ -12,6 +12,7 @@ mqtt_topic_receive = "sensors"
 mqtt_topic_send = "sensors"
 mqtt_broker_ip = "localhost"
 
+client = mqtt.Client()
 delay = 0.5        #Waitng for delay seconds between each send
 
 #Function will return a value to send in message 
