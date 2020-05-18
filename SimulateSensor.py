@@ -1,23 +1,38 @@
 """
-Python MQTT Subscription client - No Username/Password
-Thomas Varnish (https://github.com/tvarnish), (https://www.instructables.com/member/Tango172)
-Written for my Instructable - "How to use MQTT with the Raspberry Pi and ESP8266"
+Send many information in channel
+All arguments are optionals
+python SimulateSensor.py idNumber=0 minimum=0 maximum=1 delay=0.5 
 """
 import paho.mqtt.client as mqtt
+import sys
 from time import sleep
 from random import random
 
+
+"""
+This function return a string
+Default value is return if the argument doesn't exist
+"""
+def testArg(argPosition, default):
+    try:
+        return str(sys.argv[argPosition])
+    except:
+        return str(default)
+
 # Don't forget to change the variables for the MQTT broker!
-mqtt_topic_receive = "sensors"
-mqtt_topic_send = "sensors"
+mqtt_topic_send = "sensors/" + testArg(1,0)
 mqtt_broker_ip = "localhost"
 
 client = mqtt.Client()
-delay = 0.5        #Waitng for delay seconds between each send
+
+minValue = float(testArg(2, 0))
+maxValue = float(testArg(3, 1))
+delay = float(testArg(4, 0.5))
+    
 
 #Function will return a value to send in message 
 def value():
-    return random()
+    return random() * (maxValue - minValue) + minValue
 
 # Once everything has been set up, we can (finally) connect to the broker
 # 1883 is the listener port that the MQTT broker is using
