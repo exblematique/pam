@@ -1,0 +1,14 @@
+{
+  "name": "node",
+  "version": "1.0.0",
+  "description": "This is a test",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "author": "Me",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
