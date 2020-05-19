@@ -2,11 +2,11 @@
 
 #### Started all programs in Python
 #HeartRate
-python SimulateSensor.py 1 40 300 0.1 &
+python SimulateSensor.py forlife_8632/heartrate 40 300 0.1 &
 #Body temperature
-python SimulateSensor.py 2 20 45 1 &
+python SimulateSensor.py forlife_8632/arterial 20 45 1 &
 #Arterial pressure
-python SimulateSensor.py 3 0 250 2 &
+python SimulateSensor.py tmp32_3654/body_temperature 0 250 2 &
 
 
 
@@ -14,6 +14,6 @@ python SimulateSensor.py 3 0 250 2 &
 read -p 'Enter to stop the program' stop
 
 for i in $(ps | grep python | cut -d" " -f2); do
-	 kill $i
-	 echo $i
+    kill $i
+    echo $i
 done
