@@ -29,6 +29,13 @@ cred = credentials.Certificate("serviceAccountKey.json")
 firebase_admin.initialize_app(cred)
 db = firestore.client().collection('Users').document(uid).collection("data")
 
+# Use the application default credentials
+"""cred = credentials.ApplicationDefault()
+firebase_admin.initialize_app(cred, {
+      'projectId': 'pam-iot',
+    })
+"""
+
 ##########   Connection to mqtt broker
 client = mqtt.Client()
 
@@ -55,17 +62,8 @@ def on_message(client, userdata, msg):
     }
     print("-----\nName: " + name + "\nData: " + str(msg.payload))
     db.document(name).update(data)
-    #Update array of last value
-    #db.document(name).update({u'allValues': firestone.ArrayUnion([
-    #    float(msg.payload)])
-    #})
-    """
-    db.document(name).update({u'allValues': firestone.ArrayUnion([{
-        u'date': firestore.SERVER_TIMESTAMP,
-        u'value': float(msg.payload) }])
-    })
-    """    
-client.on_connect = on_connect
+
+    client.on_connect = on_connect
 client.on_message = on_message
 
 client.connect(mqtt_broker_ip, mqtt_port)
@@ -73,23 +71,6 @@ client.loop_start()
 
 while continueProg:
     pass
-
-# Use the application default credentials
-#TODO Clean code
-"""cred = credentials.ApplicationDefault()
-firebase_admin.initialize_app(cred, {
-      'projectId': 'pam-iot',
-    })
-""
-
-data = {
-        u'name': u'Los Angeles',
-        u'state': u'CA',
-        u'country': u'USA'
-    }
-"""
-# Add a new doc in collection 'cities' with ID 'LA'
-#db.collection(u'cities').document(u'LA').set(data)
 
 client.disconnect()
 print("MQTT is disconnected")
