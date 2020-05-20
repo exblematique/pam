@@ -3,6 +3,7 @@ from firebase_admin import credentials
 from firebase_admin import firestore
 
 import paho.mqtt.client as mqtt
+from time import ctime as date
 
 #To exit porperly the program
 from signal import signal, SIGINT
@@ -43,13 +44,27 @@ def on_message(client, userdata, msg):
     for t in topic[2:]:
         name += "-" + t 
     #name = msg.topic[len(mqtt_topic_receive):]
+    value = float(msg.payload)
     data = {
         u'name': name,
-        u'lastValue': float(msg.payload)
+        u'lastValue': value,
+        u'allValues': firestore.ArrayUnion([{
+            u'date': unicode(date()),
+            u'value': value
+        }])
     }
     print("-----\nName: " + name + "\nData: " + str(msg.payload))
-    db.document(name).set(data)
-    
+    db.document(name).update(data)
+    #Update array of last value
+    #db.document(name).update({u'allValues': firestone.ArrayUnion([
+    #    float(msg.payload)])
+    #})
+    """
+    db.document(name).update({u'allValues': firestone.ArrayUnion([{
+        u'date': firestore.SERVER_TIMESTAMP,
+        u'value': float(msg.payload) }])
+    })
+    """    
 client.on_connect = on_connect
 client.on_message = on_message
 
