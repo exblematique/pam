@@ -1,0 +1,44 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+  	/********* Functions ****************/
+    //Check if the selected user is a current user
+    function isCurrentUser(user) {
+            return isAuth()
+             && request.auth.uid == user;
+    }
+    
+	//Check if the current user is a doctor
+	function isDoctor(){
+		return get(/databases/$(database)/documents/Users/$(request.auth.uid)).data.status == "doctor";
+	}
+	
+    //Check if the selected user is authorized to access in data
+	//Current must be a doctor and enable to change parameter
+  	function isAuthorized(user){
+        	return isDoctor()
+				&& (
+				    isCurrentUser(user)
+				 || user in get(/databases/$(database)/documents/Users/$(request.auth.uid)).data.patientList
+				);
+    }
+    
+    //Check if the current user is authentify
+    function isAuth() {
+            return request.auth != null;
+    }
+    
+	/********* Autorisations ************/
+    //Enabled access to user collection
+    match /Users/{userId}{
+        allow write: if isAuthorized(userId);
+        allow create: if isCurrentUser(userId);
+        allow read: if isCurrentUser(userId) || isAuthorized(userId);
+        
+        match /data/{sensor}{
+            allow create, write, delete: if isCurrentUser(userId);
+            allow read: if isCurrentUser(userId) || isAuthorized(userId);
+        }
+    }
+  }
+}

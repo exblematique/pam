@@ -60,3 +60,8 @@ input, button {
   border: 1px solid #5d8ffc;
   cursor: pointer;
 }
+
+.hover_color :hover{
+  background-color: #dff5ff;
+  text-decoration: none;
+}
