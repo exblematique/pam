@@ -18,7 +18,8 @@ signal(SIGINT, handler)
 mqtt_topic_receive = "sensors/"
 mqtt_broker_ip = "localhost"
 mqtt_port = 1883
-uid = "309pfB9bbU4dB9OAqvQt"
+uid = "V1X9dyrXQxcgdQYxTvEQGd7fNgp1"
+value = []
 
 ##########   Connection to Firebase
 #Using authentification with json containt private key of server.
